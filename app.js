@@ -18,6 +18,7 @@ const CORS_CONFIG = {
 const app = express();
 
 // TODO Helmet
+// TODO Rate limiter
 
 app.use(cors(CORS_CONFIG));
 app.use(bodyParser.json({ extended: true }));
