@@ -13,8 +13,9 @@ router.use(checkToken);
 // router.use('/users', usersRouter);
 // router.use('/cards', cardsRouter);
 
-router.use((req, res, next) => {
-  next(new NotFound('Запрошенной страницы не существует'));
-});
+// router.use((req, res, next) => {
+//   console.log(404);
+//   next(new NotFound('Запрошенной страницы не существует'));
+// });
 
 module.exports = router;
