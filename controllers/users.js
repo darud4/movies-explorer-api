@@ -7,17 +7,15 @@ const BadRequest = require('../errors/BadRequest');
 
 module.exports.createUser = (req, res, next) => {
   const {
-    name, about, avatar, password, email,
+    name, password, email,
   } = req.body;
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
-      name, about, avatar, password: hash, email,
+      name, password: hash, email,
     }))
     .then((user) => res.status(200).send({
       data: {
         name: user.name,
-        about: user.about,
-        avatar: user.avatar,
         email: user.email,
         _id: user._id,
       },
@@ -53,12 +51,6 @@ module.exports.getOurUser = (req, res, next) => getUserInfo(req.user._id, res, n
 
 module.exports.getUser = (req, res, next) => getUserInfo(req.params.id, res, next);
 
-module.exports.getUsers = (req, res, next) => {
-  User.find({})
-    .then((users) => res.status(200).send(users))
-    .catch(next);
-};
-
 module.exports.updateProfile = (req, res, next) => {
   const { _id } = req.user;
   const { name, about } = req.body;
@@ -67,17 +59,6 @@ module.exports.updateProfile = (req, res, next) => {
     { name, about },
     { new: true, runValidators: true },
   )
-    .then((user) => res.status(200).send(user))
-    .catch((error) => {
-      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
-      else next(error);
-    });
-};
-
-module.exports.updateAvatar = (req, res, next) => {
-  const { _id } = req.user;
-  const { avatar } = req.body;
-  User.findByIdAndUpdate(_id, { avatar }, { new: true, runValidators: true })
     .then((user) => res.status(200).send(user))
     .catch((error) => {
       if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
