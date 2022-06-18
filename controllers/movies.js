@@ -51,7 +51,8 @@ module.exports.deleteMovie = (req, res, next) => {
 };
 
 module.exports.getMovies = (req, res, next) => {
-  Movie.find({})
+  const ourId = req.user._id;
+  Movie.find({ owner: ourId })
     .then((card) => res.status(200).send(card))
     .catch(next);
 };
