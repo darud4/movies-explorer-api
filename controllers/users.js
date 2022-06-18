@@ -6,6 +6,12 @@ const DuplicateUser = require('../errors/DuplicateUser');
 const BadRequest = require('../errors/BadRequest');
 const { ERRMSG_BAD_REQUEST, ERRMSG_EMAIL_ALREADY_EXISTS, ERRMSG_USER_ID_NOT_FOUND } = require('../utils/errorTexts');
 
+function handleUserError(error, next) {
+  if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
+  else if (error.code === 11000) next(new DuplicateUser(ERRMSG_EMAIL_ALREADY_EXISTS));
+  else next(error);
+}
+
 module.exports.createUser = (req, res, next) => {
   const {
     name, password, email,
@@ -21,11 +27,7 @@ module.exports.createUser = (req, res, next) => {
         _id: user._id,
       },
     }))
-    .catch((error) => {
-      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
-      else if (error.code === 11000) next(new DuplicateUser(ERRMSG_EMAIL_ALREADY_EXISTS));
-      else next(error);
-    });
+    .catch((error) => handleUserError(error, next));
 };
 
 module.exports.login = (req, res, next) => {
@@ -58,9 +60,5 @@ module.exports.updateProfile = (req, res, next) => {
     { new: true, runValidators: true },
   )
     .then((user) => res.status(200).send(user))
-    .catch((error) => {
-      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
-      else if (error.code === 11000) next(new DuplicateUser(ERRMSG_EMAIL_ALREADY_EXISTS));
-      else next(error);
-    });
+    .catch((error) => handleUserError(error, next));
 };
