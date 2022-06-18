@@ -4,11 +4,28 @@ const NotFound = require('../errors/NotFound');
 const NotAuthorized = require('../errors/NotAuthorized');
 
 module.exports.createMovie = (req, res, next) => {
-  const { name, link } = req.body;
+  const {
+    country, director, duration, year, description,
+    image, trailerLink, nameRU, nameEN, thumbnail, movieId,
+  } = req.body;
 
-  Movie.create({ name, link, owner: req.user._id })
+  Movie.create({
+    country,
+    director,
+    duration,
+    year,
+    description,
+    image,
+    trailerLink,
+    nameRU,
+    nameEN,
+    thumbnail,
+    movieId,
+    owner: req.user._id,
+  })
     .then((card) => res.status(200).send(card))
     .catch((error) => {
+      console.log(error);
       if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
       else next(error);
     });
