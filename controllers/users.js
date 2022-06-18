@@ -9,7 +9,6 @@ module.exports.createUser = (req, res, next) => {
   const {
     name, password, email,
   } = req.body;
-  console.log('userCreate', name, email, password);
   bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name, password: hash, email,
@@ -39,18 +38,26 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-function getUserInfo(id, res, next) {
+// function getUserInfo(id, res, next) {
+//   return User.findById(id)
+//     .then((user) => {
+//       if (user) return res.status(200).send(user);
+//       throw new NotFound('Пользователь с таким id не найден в базе');
+//     })
+//     .catch(next);
+// }
+
+module.exports.getOurUser = (req, res, next) => {
+  const id = req.user._id;
   return User.findById(id)
     .then((user) => {
       if (user) return res.status(200).send(user);
       throw new NotFound('Пользователь с таким id не найден в базе');
     })
     .catch(next);
-}
+};
 
-module.exports.getOurUser = (req, res, next) => getUserInfo(req.user._id, res, next);
-
-module.exports.getUser = (req, res, next) => getUserInfo(req.params.id, res, next);
+// module.exports.getUser = (req, res, next) => getUserInfo(req.params.id, res, next);
 
 module.exports.updateProfile = (req, res, next) => {
   const { _id } = req.user;

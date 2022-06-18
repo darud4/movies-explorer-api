@@ -4,7 +4,7 @@ const AuthError = require('../errors/AuthError');
 const { CONFIG } = require('../config');
 
 const { NODE_ENV, JWT_SECRET } = process.env;
-const SECRET = NODE_ENV === 'production' ? JWT_SECRET : CONFIG.DEV_SECRET;
+const SECRET = NODE_ENV === 'production' ? JWT_SECRET : CONFIG.devSecret;
 
 module.exports.makeToken = (payload) => jwt.sign(payload, SECRET, { expiresIn: '7d' });
 

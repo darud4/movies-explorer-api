@@ -35,7 +35,7 @@ module.exports.updateProfileValidation = {
   }),
 };
 
-module.exports.createFilmValidation = {
+module.exports.createMovieValidation = {
   body: Joi.object().keys({
     country: Joi.string().required(),
     director: Joi.string().required(),
