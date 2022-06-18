@@ -4,6 +4,7 @@ const { makeToken } = require('../middlewares/auth');
 const NotFound = require('../errors/NotFound');
 const DuplicateUser = require('../errors/DuplicateUser');
 const BadRequest = require('../errors/BadRequest');
+const { ERRMSG_BAD_REQUEST, ERRMSG_EMAIL_ALREADY_EXISTS, ERRMSG_USER_ID_NOT_FOUND } = require('../utils/errorTexts');
 
 module.exports.createUser = (req, res, next) => {
   const {
@@ -21,8 +22,8 @@ module.exports.createUser = (req, res, next) => {
       },
     }))
     .catch((error) => {
-      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
-      else if (error.code === 11000) next(new DuplicateUser('Пользователь с таким email уже зарегистрирован'));
+      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
+      else if (error.code === 11000) next(new DuplicateUser(ERRMSG_EMAIL_ALREADY_EXISTS));
       else next(error);
     });
 };
@@ -43,7 +44,7 @@ module.exports.getOurUser = (req, res, next) => {
   return User.findById(id)
     .then((user) => {
       if (user) return res.status(200).send(user);
-      throw new NotFound('Пользователь с таким id не найден в базе');
+      throw new NotFound(ERRMSG_USER_ID_NOT_FOUND);
     })
     .catch(next);
 };
@@ -58,7 +59,7 @@ module.exports.updateProfile = (req, res, next) => {
   )
     .then((user) => res.status(200).send(user))
     .catch((error) => {
-      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
+      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
       else next(error);
     });
 };

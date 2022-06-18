@@ -1,8 +1,9 @@
 const { Joi } = require('celebrate');
 const validator = require('validator');
+const { ERRMSG_INVALID_URL } = require('./errorTexts');
 
 const validateUrl = (value) => {
-  if (!validator.isURL(value, { require_protocol: true })) throw new Error('Неправильный формат ссылки');
+  if (!validator.isURL(value, { require_protocol: true })) throw new Error(ERRMSG_INVALID_URL);
   return value;
 };
 

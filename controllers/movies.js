@@ -3,6 +3,8 @@ const BadRequest = require('../errors/BadRequest');
 const NotFound = require('../errors/NotFound');
 const NotAuthorized = require('../errors/NotAuthorized');
 
+const { ERRMSG_MOVIE_NOT_FOUND, ERRMSG_MOVIE_NOT_YOURS, ERRMSG_BAD_REQUEST } = require('../utils/errorTexts');
+
 module.exports.createMovie = (req, res, next) => {
   const {
     country, director, duration, year, description,
@@ -25,7 +27,7 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((card) => res.status(200).send(card))
     .catch((error) => {
-      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
+      if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
       else next(error);
     });
 };
@@ -36,14 +38,14 @@ module.exports.deleteMovie = (req, res, next) => {
 
   return Movie.findById(id)
     .then((movie) => {
-      if (!movie) throw new NotFound('Запрошенный фильм не найден');
-      if (movie.owner.toString() !== ourId) throw new NotAuthorized('Нельзя удалить чужой фильм');
+      if (!movie) throw new NotFound(ERRMSG_MOVIE_NOT_FOUND);
+      if (movie.owner.toString() !== ourId) throw new NotAuthorized(ERRMSG_MOVIE_NOT_YOURS);
       return Promise.resolve();
     })
     .then(() => Movie.findByIdAndDelete(id))
     .then((movie) => {
       if (movie) return res.status(200).send(movie);
-      throw new NotFound('Запрошенная карточка не найдена');
+      throw new NotFound(ERRMSG_MOVIE_NOT_FOUND);
     })
     .catch(next);
 };
