@@ -50,10 +50,10 @@ module.exports.getOurUser = (req, res, next) => {
 
 module.exports.updateProfile = (req, res, next) => {
   const { _id } = req.user;
-  const { name, about } = req.body;
+  const { name, email } = req.body;
   User.findByIdAndUpdate(
     _id,
-    { name, about },
+    { name, email },
     { new: true, runValidators: true },
   )
     .then((user) => res.status(200).send(user))
