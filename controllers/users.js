@@ -38,15 +38,6 @@ module.exports.login = (req, res, next) => {
     .catch(next);
 };
 
-// function getUserInfo(id, res, next) {
-//   return User.findById(id)
-//     .then((user) => {
-//       if (user) return res.status(200).send(user);
-//       throw new NotFound('Пользователь с таким id не найден в базе');
-//     })
-//     .catch(next);
-// }
-
 module.exports.getOurUser = (req, res, next) => {
   const id = req.user._id;
   return User.findById(id)
@@ -56,8 +47,6 @@ module.exports.getOurUser = (req, res, next) => {
     })
     .catch(next);
 };
-
-// module.exports.getUser = (req, res, next) => getUserInfo(req.params.id, res, next);
 
 module.exports.updateProfile = (req, res, next) => {
   const { _id } = req.user;
