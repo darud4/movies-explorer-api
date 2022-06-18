@@ -25,7 +25,6 @@ module.exports.createMovie = (req, res, next) => {
   })
     .then((card) => res.status(200).send(card))
     .catch((error) => {
-      console.log(error);
       if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest('Переданы неверные данные'));
       else next(error);
     });
@@ -36,14 +35,14 @@ module.exports.deleteMovie = (req, res, next) => {
   const ourId = req.user._id;
 
   return Movie.findById(id)
-    .then((card) => {
-      if (!card) throw new NotFound('Запрошенная карточка не найдена');
-      if (card.owner.toString() !== ourId) throw new NotAuthorized('Нельзя удалить чужую карточку');
+    .then((movie) => {
+      if (!movie) throw new NotFound('Запрошенный фильм не найден');
+      if (movie.owner.toString() !== ourId) throw new NotAuthorized('Нельзя удалить чужой фильм');
       return Promise.resolve();
     })
     .then(() => Movie.findByIdAndDelete(id))
-    .then((card) => {
-      if (card) return res.status(200).send(card);
+    .then((movie) => {
+      if (movie) return res.status(200).send(movie);
       throw new NotFound('Запрошенная карточка не найдена');
     })
     .catch(next);
