@@ -60,6 +60,7 @@ module.exports.updateProfile = (req, res, next) => {
     .then((user) => res.status(200).send(user))
     .catch((error) => {
       if (['ValidationError', 'CastError'].includes(error.name)) next(new BadRequest(ERRMSG_BAD_REQUEST));
+      else if (error.code === 11000) next(new DuplicateUser(ERRMSG_EMAIL_ALREADY_EXISTS));
       else next(error);
     });
 };
