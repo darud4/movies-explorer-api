@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+require('dotenv').config();
 
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
@@ -9,10 +10,14 @@ const { errorHandler } = require('./utils/errorHandler');
 const { CONFIG } = require('./config');
 const router = require('./routes/index');
 
+const { NODE_ENV, BASE } = process.env;
+const connectionString = NODE_ENV === 'production' ? BASE : CONFIG.devBase;
+
 const CORS_CONFIG = {
   credentials: true,
   origin: [
-    'http://localhost',
+    'http://darud-diploma.nomoreparties.sbs',
+    'https://darud-diploma.nomoreparties.sbs',
   ],
 };
 
@@ -32,7 +37,7 @@ app.use(errorHandler);
 
 function connectToBase() {
   mongoose
-    .connect(CONFIG.base, {
+    .connect(connectionString, {
       useNewUrlParser: true,
     })
     .then(() => {
