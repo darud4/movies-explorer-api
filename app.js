@@ -1,12 +1,12 @@
 const express = require('express');
-const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 require('dotenv').config();
 
+const helmet = require('helmet');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const { errors } = require('celebrate');
-const cors = require('cors');
-const helmet = require('helmet');
+const { limiter } = require('./middlewares/rateLimiter');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const { errorHandler } = require('./utils/errorHandler');
 const { CONFIG } = require('./config');
@@ -23,18 +23,13 @@ const CORS_CONFIG = {
   ],
 };
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // за 15 минут
-  max: 100, // можно совершить максимум 100 запросов с одного IP
-});
-
 const app = express();
 
+app.use(requestLogger);
 app.use(limiter);
 app.use(helmet());
 app.use(cors(CORS_CONFIG));
 app.use(bodyParser.json({ extended: true }));
-app.use(requestLogger);
 
 app.use(router);
 
