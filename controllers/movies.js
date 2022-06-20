@@ -41,9 +41,8 @@ module.exports.deleteMovie = (req, res, next) => {
     .then((movie) => {
       if (!movie) throw new NotFound(ERRMSG_MOVIE_NOT_FOUND);
       if (movie.owner.toString() !== ourId) throw new NotAuthorized(ERRMSG_MOVIE_NOT_YOURS);
-      return Promise.resolve();
+      return Movie.findByIdAndDelete(id);
     })
-    .then(() => Movie.findByIdAndDelete(id))
     .then((movie) => {
       if (movie) return res.status(200).send(movie);
       throw new NotFound(ERRMSG_MOVIE_NOT_FOUND);

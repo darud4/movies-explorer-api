@@ -7,6 +7,7 @@ module.exports.ERRMSG_MOVIE_NOT_FOUND = 'Запрошенный фильм не 
 module.exports.ERRMSG_MOVIE_NOT_YOURS = 'Нельзя удалить чужой фильм';
 
 module.exports.ERRMSG_AUTH_ERROR = 'Ошибка авторизации';
+module.exports.ERRMSG_LOGIN_ERROR = 'Неправильная почта или пароль';
 module.exports.ERRMSG_PAGE_NOT_FOUND = 'Запрошенной страницы не существует';
 
 module.exports.ERRMSG_UNKNOWN_ERROR = 'На сервере произошла ошибка';

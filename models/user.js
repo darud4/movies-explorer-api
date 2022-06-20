@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcryptjs');
 const AuthError = require('../errors/AuthError');
-const { ERRMSG_AUTH_ERROR } = require('../utils/errorTexts');
+const { ERRMSG_LOGIN_ERROR } = require('../utils/errorTexts');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -27,10 +27,10 @@ const userSchema = new mongoose.Schema({
 userSchema.statics.findUserByCredentials = function findUserByCredentials(email, password) {
   return this.findOne({ email }).select('+password')
     .then((user) => {
-      if (!user) throw new AuthError(ERRMSG_AUTH_ERROR);
+      if (!user) throw new AuthError(ERRMSG_LOGIN_ERROR);
 
       return bcrypt.compare(password, user.password)
-        .then((matched) => ((matched) ? user : Promise.reject(new AuthError(ERRMSG_AUTH_ERROR))));
+        .then((matched) => ((matched) ? user : Promise.reject(new AuthError(ERRMSG_LOGIN_ERROR))));
     });
 };
 
