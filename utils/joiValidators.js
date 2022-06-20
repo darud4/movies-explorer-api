@@ -11,7 +11,7 @@ module.exports.registerValidation = {
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
   }),
 };
 
@@ -24,14 +24,13 @@ module.exports.loginValidation = {
 
 module.exports.idValidation = {
   params: Joi.object().keys({
-    id: Joi.string().required().alphanum().min(24)
-      .max(24),
+    id: Joi.string().required().hex().length(24),
   }),
 };
 
 module.exports.updateProfileValidation = {
   body: Joi.object().keys({
-    name: Joi.string().min(2).max(30),
+    name: Joi.string().required().min(2).max(30),
     email: Joi.string().required().email(),
   }),
 };
@@ -48,6 +47,6 @@ module.exports.createMovieValidation = {
     nameRU: Joi.string().required(),
     nameEN: Joi.string().required(),
     thumbnail: Joi.string().required().custom(validateUrl),
-    movieId: Joi.string().required(),
+    movieId: Joi.number().required(),
   }),
 };
